@@ -1,0 +1,7 @@
+server:
+  port: 8085
+
+eureka:
+  instance:
+    instance-id: auth-api-2
+    hostname: localhost
