@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,4 +13,5 @@ public class MemberDto {
 
     private String id;
     private String password;
+    private List<String> roles;
 }

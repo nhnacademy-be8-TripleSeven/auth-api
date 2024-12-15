@@ -5,6 +5,8 @@ import com.example.msaauthapi.application.service.AuthService;
 import com.example.msaauthapi.common.jwt.JwtProvider;
 import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,5 +28,19 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException();
         }
         return jwtProvider.generateToken(memberDto, response);
+    }
+
+    @Override
+    public TokenInfo reIssueJwt(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        String refreshToken = "";
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refreshToken")) {
+                refreshToken = cookie.getValue();
+            }
+        }
+
+        return jwtProvider.reissueToken(refreshToken, response);
     }
 }
