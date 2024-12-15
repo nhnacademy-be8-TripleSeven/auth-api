@@ -6,13 +6,19 @@ spring:
     timeout-per-shutdown-phase: 30s
   application:
     name: auth-api
+  data:
+    redis:
+      host: 133.186.241.167
+      port: 6379
+      password: '*N2vya7H@muDTwdNMR!'
+      database: 221
 
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://admin:1234@localhost:8761/eureka
+      defaultZone: http://admin:1234@eureka-server:8761/eureka
   instance:
     prefer-ip-address: true
 

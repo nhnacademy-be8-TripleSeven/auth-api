@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t lushlife99/nhn-member:${{ github.sha }} .
+          docker build -t lushlife99/nhn-auth:${{ github.sha }} .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -35,7 +35,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push lushlife99/nhn-member:${{ github.sha }}
+          docker push lushlife99/nhn-auth:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,8 +63,8 @@ jobs:
               docker stop auth-api-instance-1 || true
               docker rm -f auth-api-instance-1 || true
             fi
-              docker run -d --name auth-api-instance-1 -p 8084:8084 -e SPRING_PROFILES_ACTIVE=instance1 lushlife99/nhn-auth:${{ github.sha }}
-
+              docker run --name auth-api-instance-1 --network nhn-book-store-network -p 8084:8084 -e SPRING_PROFILES_ACTIVE=instance1 -d lushlife99/nhn-auth:${{ github.sha }}
+            
 
       - name: Deploy to Second Instance
         uses: appleboy/ssh-action@master
@@ -79,4 +79,5 @@ jobs:
               docker stop auth-api-instance-2 || true
               docker rm -f auth-api-instance-2 || true
             fi
-              docker run -d --name auth-api-instance-2 -p 8085:8085 -e SPRING_PROFILES_ACTIVE=instance2 lushlife99/nhn-auth:${{ github.sha }}
+              docker run --name auth-api-instance-2 --network nhn-book-store-network -p 8085:8085 -e SPRING_PROFILES_ACTIVE=instance2 -d lushlife99/nhn-auth:${{ github.sha }}
+              

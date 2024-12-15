@@ -5,3 +5,17 @@ eureka:
   instance:
     instance-id: auth-api
     hostname: localhost
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://admin:1234@localhost:8761/eureka/
+
+
+spring:
+  data:
+    redis:
+      host: 133.186.241.167
+      port: 6379
+      password: '*N2vya7H@muDTwdNMR!'
+      database: 221
