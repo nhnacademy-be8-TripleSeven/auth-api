@@ -23,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenInfo login(MemberDto memberDto, HttpServletResponse response) {
-        MemberDto member = memberAdapter.getMember(memberDto.getId());
+        MemberDto member = memberAdapter.getMember(memberDto.getLoginId());
         if (!passwordEncoder.matches(memberDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException();
         }

@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MemberAdapter {
 
     @GetMapping
-    MemberDto getMember(@RequestParam String id);
+    MemberDto getMember(@RequestParam String loginId);
 
 }

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -55,7 +54,7 @@ public class JwtProvider {
         response.addCookie(cookie);
 
         redisTemplate.opsForValue().set(
-                JWT_KEY_PREFIX + memberDto.getId(),
+                JWT_KEY_PREFIX + memberDto.getLoginId(),
                 refreshToken,
                 refreshExpirationTime,
                 TimeUnit.MILLISECONDS
@@ -87,7 +86,7 @@ public class JwtProvider {
         Date now = new Date();
         Date accessTokenExpiresIn = new Date(now.getTime() + accessExpirationTime);
         return Jwts.builder()
-                .setSubject(memberDto.getId())
+                .setSubject(memberDto.getLoginId())
                 .claim(AUTHORITIES_KEY, memberDto.getRoles())
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -95,7 +94,7 @@ public class JwtProvider {
     }
 
     private String generateRefreshToken(MemberDto memberDto) {
-        Claims claims = Jwts.claims().setSubject(memberDto.getId());
+        Claims claims = Jwts.claims().setSubject(memberDto.getLoginId());
         Date now = new Date();
         Date refreshTokenExpiresIn = new Date(now.getTime() + refreshExpirationTime);
         return Jwts.builder()
