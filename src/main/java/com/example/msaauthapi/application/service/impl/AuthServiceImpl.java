@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,31 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return jwtProvider.reissueToken(refreshToken, response);
+    }
+
+    @Override
+    public TokenInfo adminLogin(MemberLoginRequest loginRequest, HttpServletResponse response) {
+        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
+            throw new IllegalArgumentException(); // 401
+        }
+
+        if (!hasAdminRole(member.getRoles())) {
+            throw new IllegalArgumentException(); // 403
+        }
+
+        return jwtProvider.generateToken(member, response);
+    }
+
+    private boolean hasAdminRole(List<String> roles) {
+
+        for (String role : roles) {
+            if (role.contains("ADMIN")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

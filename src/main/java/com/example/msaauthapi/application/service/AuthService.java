@@ -10,4 +10,5 @@ public interface AuthService {
 
     TokenInfo login(MemberLoginRequest loginRequest, HttpServletResponse response);
     TokenInfo reIssueJwt(HttpServletRequest request, HttpServletResponse response);
+    TokenInfo adminLogin(MemberLoginRequest loginRequest, HttpServletResponse response);
 }
