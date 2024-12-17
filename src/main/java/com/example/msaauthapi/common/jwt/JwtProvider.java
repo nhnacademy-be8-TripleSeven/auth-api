@@ -1,6 +1,7 @@
 package com.example.msaauthapi.common.jwt;
 
 import com.example.msaauthapi.dto.MemberDto;
+import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -64,7 +65,7 @@ public class JwtProvider {
         Date now = new Date();
         Date accessTokenExpiresIn = new Date(now.getTime() + accessExpirationTime);
         return Jwts.builder()
-                .setSubject(memberDto.getId())
+                .setSubject(memberDto.getId().toString())
                 .claim(AUTHORITIES_KEY, authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -72,7 +73,7 @@ public class JwtProvider {
     }
 
     private String generateRefreshToken(MemberDto memberDto) {
-        Claims claims = Jwts.claims().setSubject(memberDto.getId());
+        Claims claims = Jwts.claims().setSubject(memberDto.getId().toString());
         Date now = new Date();
         Date refreshTokenExpiresIn = new Date(now.getTime() + refreshExpirationTime);
         return Jwts.builder()
