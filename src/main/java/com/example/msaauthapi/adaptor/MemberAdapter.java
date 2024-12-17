@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value="member-api", path="/members")
 public interface MemberAdapter {
 
-    @GetMapping("/auth")
+    @GetMapping
     MemberDto getMember(@RequestParam String loginId);
 
 }
