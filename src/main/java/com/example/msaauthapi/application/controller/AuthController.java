@@ -1,7 +1,6 @@
 package com.example.msaauthapi.application.controller;
 
 import com.example.msaauthapi.application.service.AuthService;
-import com.example.msaauthapi.common.jwt.JwtProvider;
 import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public TokenInfo login(@RequestBody MemberDto memberDto) {
+    public TokenInfo login(@RequestBody MemberLoginRequest memberLoginRequest) {
         return authService.login(memberDto);
     }
 

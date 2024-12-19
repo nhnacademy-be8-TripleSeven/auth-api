@@ -11,7 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 public class MemberDto {
 
-    private String loginId;
-    private String password;
+    private Long id;
+    private MemberAccount memberAccount;
     private List<String> roles;
+
+    @Getter
+    @AllArgsConstructor
+    public static class MemberAccount {
+        private String id;
+        private String password;
+    }
 }

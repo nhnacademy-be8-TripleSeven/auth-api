@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthService {
 
-    TokenInfo login(MemberDto memberDto);
+    TokenInfo login(MemberLoginRequest loginRequest);
     TokenInfo reIssueJwt(String refreshToken);
+    TokenInfo adminLogin(MemberLoginRequest loginRequest);
 }

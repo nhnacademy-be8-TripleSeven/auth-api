@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
 
     @Override
-    public TokenInfo login(MemberDto memberDto) {
+    public TokenInfo login(MemberLoginRequest loginRequest) {
         MemberDto member = memberAdapter.getMember(memberDto.getLoginId());
         if (!passwordEncoder.matches(memberDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException();
@@ -33,5 +35,31 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenInfo reIssueJwt(String refreshToken) {
         return jwtProvider.reissueToken(refreshToken);
+    }
+
+    @Override
+    public TokenInfo adminLogin(MemberLoginRequest loginRequest) {
+        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
+            throw new IllegalArgumentException(); // 401
+        }
+
+        if (!hasAdminRole(member.getRoles())) {
+            throw new IllegalArgumentException(); // 403
+        }
+
+        return jwtProvider.generateToken(member);
+    }
+
+    private boolean hasAdminRole(List<String> roles) {
+
+        for (String role : roles) {
+            if (role.contains("ADMIN")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
