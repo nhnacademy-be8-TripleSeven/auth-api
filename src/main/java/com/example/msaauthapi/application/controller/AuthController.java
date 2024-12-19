@@ -3,6 +3,7 @@ package com.example.msaauthapi.application.controller;
 import com.example.msaauthapi.application.service.AuthService;
 import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
+import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public TokenInfo login(@RequestBody MemberLoginRequest memberLoginRequest) {
-        return authService.login(memberDto);
+        return authService.login(memberLoginRequest);
     }
 
     @GetMapping("/re-issue")

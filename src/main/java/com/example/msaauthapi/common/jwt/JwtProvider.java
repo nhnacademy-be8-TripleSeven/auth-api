@@ -47,7 +47,7 @@ public class JwtProvider {
         String accessToken = generateAccessToken(memberDto);
         String refreshToken = generateRefreshToken(memberDto);
         redisTemplate.opsForValue().set(
-                JWT_KEY_PREFIX + memberDto.getLoginId(),
+                JWT_KEY_PREFIX + memberDto.getId(),
                 refreshToken,
                 refreshExpirationTime,
                 TimeUnit.MILLISECONDS
@@ -79,7 +79,7 @@ public class JwtProvider {
         Date now = new Date();
         Date accessTokenExpiresIn = new Date(now.getTime() + accessExpirationTime);
         return Jwts.builder()
-                .setSubject(memberDto.getLoginId())
+                .setSubject(memberDto.getId().toString())
                 .claim(AUTHORITIES_KEY, memberDto.getRoles())
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -87,7 +87,7 @@ public class JwtProvider {
     }
 
     private String generateRefreshToken(MemberDto memberDto) {
-        Claims claims = Jwts.claims().setSubject(memberDto.getLoginId());
+        Claims claims = Jwts.claims().setSubject(memberDto.getId().toString());
         Date now = new Date();
         Date refreshTokenExpiresIn = new Date(now.getTime() + refreshExpirationTime);
         return Jwts.builder()

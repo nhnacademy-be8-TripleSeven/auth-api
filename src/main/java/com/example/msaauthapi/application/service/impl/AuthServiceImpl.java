@@ -5,6 +5,7 @@ import com.example.msaauthapi.application.service.AuthService;
 import com.example.msaauthapi.common.jwt.JwtProvider;
 import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
+import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,11 +26,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenInfo login(MemberLoginRequest loginRequest) {
-        MemberDto member = memberAdapter.getMember(memberDto.getLoginId());
-        if (!passwordEncoder.matches(memberDto.getPassword(), member.getPassword())) {
+        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
+        if (!passwordEncoder.matches(member.getMemberAccount().getPassword(), loginRequest.getPassword())) {
             throw new IllegalArgumentException();
         }
-        return jwtProvider.generateToken(memberDto);
+        return jwtProvider.generateToken(member);
     }
 
     @Override

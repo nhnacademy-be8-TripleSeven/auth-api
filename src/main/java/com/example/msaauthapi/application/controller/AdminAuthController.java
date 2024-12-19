@@ -18,7 +18,7 @@ public class AdminAuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public TokenInfo adminLogin(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
-        return authService.login(memberLoginRequest, response);
+    public TokenInfo adminLogin(@RequestBody MemberLoginRequest memberLoginRequest) {
+        return authService.login(memberLoginRequest);
     }
 }
