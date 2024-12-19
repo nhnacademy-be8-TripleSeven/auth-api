@@ -43,16 +43,9 @@ public class JwtProvider {
         this.redisTemplate = redisTemplate;
         this.memberAdapter = memberAdapter;
     }
-    public TokenInfo generateToken(MemberDto memberDto, HttpServletResponse response) {
+    public TokenInfo generateToken(MemberDto memberDto) {
         String accessToken = generateAccessToken(memberDto);
         String refreshToken = generateRefreshToken(memberDto);
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge(refreshExpirationTime);
-        cookie.setPath("/");
-        //cookie.setSecure(true); //로컬환경에서는 Secure 설정을 꺼놔야 함. secure 켜지면 https 환경에서만 쿠키가 전달됨.
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-
         redisTemplate.opsForValue().set(
                 JWT_KEY_PREFIX + memberDto.getLoginId(),
                 refreshToken,
@@ -68,7 +61,7 @@ public class JwtProvider {
                 .build();
     }
 
-    public TokenInfo reissueToken(String reqRefreshToken, HttpServletResponse response) throws RuntimeException{
+    public TokenInfo reissueToken(String reqRefreshToken) throws RuntimeException{
         Claims claims = parseClaims(reqRefreshToken);
         String refreshToken = redisTemplate.opsForValue().get(JWT_KEY_PREFIX + claims.getSubject()).toString();
 
@@ -79,7 +72,7 @@ public class JwtProvider {
 
         String memberId = parseClaims(refreshToken).getSubject();
         MemberDto member = memberAdapter.getMember(memberId);
-        return generateToken(member, response);
+        return generateToken(member);
     }
 
     private String generateAccessToken(MemberDto memberDto) {

@@ -22,25 +22,16 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
 
     @Override
-    public TokenInfo login(MemberDto memberDto, HttpServletResponse response) {
+    public TokenInfo login(MemberDto memberDto) {
         MemberDto member = memberAdapter.getMember(memberDto.getLoginId());
         if (!passwordEncoder.matches(memberDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException();
         }
-        return jwtProvider.generateToken(memberDto, response);
+        return jwtProvider.generateToken(memberDto);
     }
 
     @Override
-    public TokenInfo reIssueJwt(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        String refreshToken = "";
-
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken")) {
-                refreshToken = cookie.getValue();
-            }
-        }
-
-        return jwtProvider.reissueToken(refreshToken, response);
+    public TokenInfo reIssueJwt(String refreshToken) {
+        return jwtProvider.reissueToken(refreshToken);
     }
 }

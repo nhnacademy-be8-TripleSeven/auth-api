@@ -1,6 +1,7 @@
 package com.example.msaauthapi.application.controller;
 
 import com.example.msaauthapi.application.service.AuthService;
+import com.example.msaauthapi.common.jwt.JwtProvider;
 import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,13 +18,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public TokenInfo login(@RequestBody MemberDto memberDto, HttpServletResponse response) {
-        return authService.login(memberDto, response);
+    public TokenInfo login(@RequestBody MemberDto memberDto) {
+        return authService.login(memberDto);
     }
 
     @GetMapping("/re-issue")
-    public TokenInfo reIssueAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        return authService.reIssueJwt(request, response);
+    public TokenInfo reIssueAccessToken(@CookieValue("refresh-token") String refreshToken) {
+        return authService.reIssueJwt(refreshToken);
     }
 
 }
