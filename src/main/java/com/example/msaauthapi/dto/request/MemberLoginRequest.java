@@ -1,6 +1,7 @@
 package com.example.msaauthapi.dto.request;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class MemberLoginRequest {
 
+    @NotNull
     private String loginId;
+    @NotNull
     private String password;
 }

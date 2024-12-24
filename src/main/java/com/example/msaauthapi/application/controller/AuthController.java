@@ -6,6 +6,8 @@ import com.example.msaauthapi.dto.MemberDto;
 import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public TokenInfo login(@RequestBody MemberLoginRequest memberLoginRequest) {
+    public TokenInfo login(@Valid @RequestBody MemberLoginRequest memberLoginRequest) {
         return authService.login(memberLoginRequest);
     }
 
