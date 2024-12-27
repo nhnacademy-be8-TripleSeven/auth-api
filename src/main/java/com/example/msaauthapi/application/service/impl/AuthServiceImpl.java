@@ -24,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenInfo login(MemberLoginRequest loginRequest) {
         MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
-        if (!passwordEncoder.matches(member.getMemberAccount().getPassword(), loginRequest.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
             throw new IllegalArgumentException();
         }
         return jwtProvider.generateToken(member);
