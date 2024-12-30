@@ -75,6 +75,10 @@ public class JwtProvider {
         return generateToken(member);
     }
 
+    public void deleteRefreshToken(Long userId) {
+        redisTemplate.delete(JWT_KEY_PREFIX + userId);
+    }
+
     private String generateAccessToken(MemberDto memberDto) {
         Date now = new Date();
         Date accessTokenExpiresIn = new Date(now.getTime() + accessExpirationTime);

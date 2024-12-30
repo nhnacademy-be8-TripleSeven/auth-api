@@ -11,4 +11,6 @@ public interface AuthService {
     TokenInfo login(MemberLoginRequest loginRequest);
     TokenInfo reIssueJwt(String refreshToken);
     TokenInfo adminLogin(MemberLoginRequest loginRequest);
+    void logout(Long userId);
+
 }

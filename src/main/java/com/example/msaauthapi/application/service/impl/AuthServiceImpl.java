@@ -7,6 +7,7 @@ import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
 import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,11 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return jwtProvider.generateToken(member);
+    }
+
+    @Override
+    public void logout(Long userId) {
+        jwtProvider.deleteRefreshToken(userId);
     }
 
     private boolean hasAdminRole(List<String> roles) {
