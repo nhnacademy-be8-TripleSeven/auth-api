@@ -56,6 +56,12 @@ public class AuthServiceImpl implements AuthService {
         jwtProvider.deleteRefreshToken(userId);
     }
 
+    @Override
+    public TokenInfo paycoLogin(String clientId) {
+        MemberDto member = memberAdapter.getMember(clientId);
+        return jwtProvider.generateToken(member);
+    }
+
     private boolean hasAdminRole(List<String> roles) {
 
         for (String role : roles) {

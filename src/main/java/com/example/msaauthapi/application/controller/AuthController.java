@@ -30,6 +30,14 @@ public class AuthController {
         return tokenInfo;
     }
 
+    @PostMapping("/payco/login/{clientId}")
+    public TokenInfo paycoLogin(@PathVariable String clientId, HttpServletResponse response) {
+        TokenInfo tokenInfo = authService.paycoLogin(clientId);
+        Cookie cookie = cookieUtil.setRefreshTokenHttpSecureCookie(tokenInfo.getRefreshToken());
+        response.addCookie(cookie);
+        return tokenInfo;
+    }
+
     @GetMapping("/re-issue")
     public TokenInfo reIssueAccessToken(@CookieValue("refresh-token") String refreshToken) {
         return authService.reIssueJwt(refreshToken);

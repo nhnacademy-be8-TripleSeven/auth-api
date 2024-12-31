@@ -13,4 +13,6 @@ public interface AuthService {
     TokenInfo adminLogin(MemberLoginRequest loginRequest);
     void logout(Long userId);
 
+    TokenInfo paycoLogin(String clientId);
+
 }
