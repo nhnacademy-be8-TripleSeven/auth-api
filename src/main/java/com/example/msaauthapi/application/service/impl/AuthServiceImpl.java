@@ -1,6 +1,8 @@
 package com.example.msaauthapi.application.service.impl;
 
 import com.example.msaauthapi.adaptor.MemberAdapter;
+import com.example.msaauthapi.application.error.CustomException;
+import com.example.msaauthapi.application.error.ErrorCode;
 import com.example.msaauthapi.application.service.AuthService;
 import com.example.msaauthapi.common.jwt.JwtProvider;
 import com.example.msaauthapi.common.jwt.TokenInfo;
@@ -26,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenInfo login(MemberLoginRequest loginRequest) {
         MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
-            throw new IllegalArgumentException();
+            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
         }
         return jwtProvider.generateToken(member);
     }
@@ -41,11 +43,11 @@ public class AuthServiceImpl implements AuthService {
         MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
-            throw new IllegalArgumentException(); // 401
+            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
         }
 
         if (!hasAdminRole(member.getRoles())) {
-            throw new IllegalArgumentException(); // 403
+            throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
         return jwtProvider.generateToken(member);

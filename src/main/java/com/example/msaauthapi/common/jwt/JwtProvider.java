@@ -1,6 +1,8 @@
 package com.example.msaauthapi.common.jwt;
 
 import com.example.msaauthapi.adaptor.MemberAdapter;
+import com.example.msaauthapi.application.error.CustomException;
+import com.example.msaauthapi.application.error.ErrorCode;
 import com.example.msaauthapi.dto.MemberDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -8,8 +10,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -61,13 +61,13 @@ public class JwtProvider {
                 .build();
     }
 
-    public TokenInfo reissueToken(String reqRefreshToken) throws RuntimeException{
+    public TokenInfo reissueToken(String reqRefreshToken) {
         Claims claims = parseClaims(reqRefreshToken);
         String refreshToken = redisTemplate.opsForValue().get(JWT_KEY_PREFIX + claims.getSubject()).toString();
 
         // refresh토큰이 불일치 시 401에러
         if(!refreshToken.equals(reqRefreshToken)){
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         String memberId = parseClaims(refreshToken).getSubject();
