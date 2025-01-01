@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AdminAuthController {
 
     private final CookieUtil cookieUtil;
     private final AuthService authService;
 
-    @PostMapping("/login")
+    @PostMapping("/admin/login")
     public TokenInfo adminLogin(@Valid @RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
         TokenInfo tokenInfo = authService.adminLogin(memberLoginRequest);
         Cookie cookie = cookieUtil.setRefreshTokenHttpSecureCookie(tokenInfo.getRefreshToken());
