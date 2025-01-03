@@ -25,29 +25,31 @@ public class AuthController {
     @PostMapping("/login")
     public TokenInfo login(@Valid @RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
         TokenInfo tokenInfo = authService.login(memberLoginRequest);
-        Cookie cookie = cookieUtil.setRefreshTokenHttpSecureCookie(tokenInfo.getRefreshToken());
-        response.addCookie(cookie);
+        cookieUtil.setAuthCookies(tokenInfo, response);
         return tokenInfo;
     }
 
     @PostMapping("/payco/login")
     public TokenInfo paycoLogin(@RequestParam String clientId, HttpServletResponse response) {
         TokenInfo tokenInfo = authService.paycoLogin(clientId);
-        Cookie cookie = cookieUtil.setRefreshTokenHttpSecureCookie(tokenInfo.getRefreshToken());
-        response.addCookie(cookie);
+        cookieUtil.setAuthCookies(tokenInfo, response);
         return tokenInfo;
     }
 
     @GetMapping("/re-issue")
-    public TokenInfo reIssueAccessToken(@CookieValue("refresh-token") String refreshToken) {
-        return authService.reIssueJwt(refreshToken);
+    public TokenInfo reIssueAccessToken(@CookieValue("refresh-token") String refreshToken, HttpServletResponse response) {
+        TokenInfo tokenInfo = authService.reIssueJwt(refreshToken);
+        cookieUtil.setAuthCookies(tokenInfo, response);
+        return tokenInfo;
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("X-USER") Long userId, HttpServletResponse response) {
         authService.logout(userId);
-        Cookie cookie = cookieUtil.removeCookie();
-        response.addCookie(cookie);
+        Cookie accessTokenCookie = cookieUtil.removeAccessTokenCookie();
+        Cookie refreshTokenCookie = cookieUtil.removeRefreshTokenCookie();
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
         return ResponseEntity.ok().build();
     }
 

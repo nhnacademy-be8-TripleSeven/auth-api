@@ -24,8 +24,7 @@ public class AdminAuthController {
     @PostMapping("/admin/login")
     public TokenInfo adminLogin(@Valid @RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
         TokenInfo tokenInfo = authService.adminLogin(memberLoginRequest);
-        Cookie cookie = cookieUtil.setRefreshTokenHttpSecureCookie(tokenInfo.getRefreshToken());
-        response.addCookie(cookie);
+        cookieUtil.setAuthCookies(tokenInfo, response);
         return tokenInfo;
     }
 }
