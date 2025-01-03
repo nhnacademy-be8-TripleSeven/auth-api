@@ -4,4 +4,10 @@ server:
 eureka:
   instance:
     instance-id: auth-api
-    hostname: ~~~~
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://admin:1234@eureka-server:8761/eureka
+
