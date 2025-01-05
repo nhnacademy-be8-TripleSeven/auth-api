@@ -27,9 +27,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenInfo login(MemberLoginRequest loginRequest) {
         MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
+
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
             throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
         }
+
+        if (hasRole(member.getRoles(), "INACTIVE")) {
+            throw new CustomException(ErrorCode.INACTIVE_ACCOUNT);
+        }
+
+        memberAdapter.updateLastLoggedInAt(member.getId());
         return jwtProvider.generateToken(member);
     }
 
@@ -46,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
         }
 
-        if (!hasAdminRole(member.getRoles())) {
+        if (!hasRole(member.getRoles(), "ADMIN")) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
@@ -64,10 +71,10 @@ public class AuthServiceImpl implements AuthService {
         return jwtProvider.generateToken(member);
     }
 
-    private boolean hasAdminRole(List<String> roles) {
+    private boolean hasRole(List<String> roles, String roleValue) {
 
         for (String role : roles) {
-            if (role.contains("ADMIN")) {
+            if (role.contains(roleValue)) {
                 return true;
             }
         }
