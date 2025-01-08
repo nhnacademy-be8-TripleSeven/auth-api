@@ -4,4 +4,6 @@ server:
 eureka:
   instance:
     instance-id: auth-api-1
-    hostname: localhost
+    hostname: https://nhn24.store
+    metadata-map:
+      domain: https://nhn24.store

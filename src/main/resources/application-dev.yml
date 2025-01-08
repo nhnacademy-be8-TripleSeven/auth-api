@@ -5,6 +5,8 @@ eureka:
   instance:
     instance-id: auth-api
     hostname: localhost
+    metadata-map:
+      domain: http://localhost
   client:
     fetch-registry: true
     register-with-eureka: true

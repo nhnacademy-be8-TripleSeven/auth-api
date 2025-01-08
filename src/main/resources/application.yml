@@ -46,3 +46,6 @@ jwt:
   refresh-expiration-time: 259200000 # 3days
   access-expiration-time: 3600000 # 1hour
 
+member:
+  auth:
+    key: lqMqcKlopU2drpHC

@@ -36,8 +36,8 @@ public class AuthController {
         return tokenInfo;
     }
 
-    @GetMapping("/re-issue")
-    public TokenInfo reIssueAccessToken(@CookieValue("refresh-token") String refreshToken, HttpServletResponse response) {
+    @GetMapping("/refresh/token")
+    public TokenInfo reIssueAccessToken(@RequestHeader("refresh-token") String refreshToken, HttpServletResponse response) {
         TokenInfo tokenInfo = authService.reIssueJwt(refreshToken);
         cookieUtil.setAuthCookies(tokenInfo, response);
         return tokenInfo;

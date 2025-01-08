@@ -23,6 +23,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class JwtProvider {
 
+    @Value("${member.auth.key}")
+    private String memberAuthKey;
+
     private static final String AUTHORITIES_KEY = "auth";
     private static final String JWT_KEY_PREFIX = "jwt:";
     private final Key key;
@@ -57,9 +60,11 @@ public class JwtProvider {
         return TokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .refreshToken("httpOnly")
+                .refreshToken(refreshToken)
                 .build();
     }
+
+
 
     public TokenInfo reissueToken(String reqRefreshToken) {
         Claims claims = parseClaims(reqRefreshToken);
@@ -70,8 +75,8 @@ public class JwtProvider {
             throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        String memberId = parseClaims(refreshToken).getSubject();
-        MemberDto member = memberAdapter.getMember(memberId);
+        Long memberId = Long.parseLong(parseClaims(refreshToken).getSubject());
+        MemberDto member = memberAdapter.getMember(memberId, memberAuthKey);
         return generateToken(member);
     }
 

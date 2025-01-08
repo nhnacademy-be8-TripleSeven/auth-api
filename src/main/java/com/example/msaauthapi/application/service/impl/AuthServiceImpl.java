@@ -9,6 +9,7 @@ import com.example.msaauthapi.common.jwt.TokenInfo;
 import com.example.msaauthapi.dto.MemberDto;
 import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    @Value("${member.auth.key}")
+    private String memberAuthKey;
+
     private final MemberAdapter memberAdapter;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
     @Override
     public TokenInfo login(MemberLoginRequest loginRequest) {
-        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
+        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId(), memberAuthKey);
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
             throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
@@ -47,7 +51,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenInfo adminLogin(MemberLoginRequest loginRequest) {
-        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId());
+        MemberDto member = memberAdapter.getMember(loginRequest.getLoginId(), memberAuthKey
+        );
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getMemberAccount().getPassword())) {
             throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
@@ -67,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenInfo paycoLogin(String clientId) {
-        MemberDto member = memberAdapter.getMember(clientId);
+        MemberDto member = memberAdapter.getMember(clientId, memberAuthKey);
         return jwtProvider.generateToken(member);
     }
 
