@@ -40,6 +40,10 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ErrorCode.INACTIVE_ACCOUNT);
         }
 
+        if (hasRole(member.getRoles(), "QUIT")) {
+            throw new CustomException(ErrorCode.QUIT_ACCOUNT);
+        }
+
         memberAdapter.updateLastLoggedInAt(member.getId());
         return jwtProvider.generateToken(member);
     }

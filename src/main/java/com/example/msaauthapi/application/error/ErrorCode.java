@@ -16,6 +16,7 @@ public enum ErrorCode {
     /* 403 FORBIDDEN : 권한이 없는 사용자 */
     FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
     INACTIVE_ACCOUNT(HttpStatus.FORBIDDEN, "휴면 계정입니다."),
+    QUIT_ACCOUNT(HttpStatus.FORBIDDEN, "탈퇴한 사용자입니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
 
