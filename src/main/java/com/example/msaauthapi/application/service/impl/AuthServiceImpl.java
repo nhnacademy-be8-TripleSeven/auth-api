@@ -10,7 +10,6 @@ import com.example.msaauthapi.dto.MemberDto;
 import com.example.msaauthapi.dto.request.MemberLoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
