@@ -42,7 +42,6 @@ public class CookieUtil {
         return removeCookie("jwt_token");
     }
 
-    // 쿠키 생성 시 중복 로직을 처리하는 공통 메서드
     private Cookie createHttpSecureCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);   // 클라이언트에서 JavaScript로 쿠키 접근 불가
@@ -56,7 +55,9 @@ public class CookieUtil {
     private Cookie removeCookie(String name) {
         Cookie cookie = new Cookie(name, null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        if (!profile.equals("dev")) {
+            cookie.setSecure(true);
+        }
         cookie.setPath("/");
         cookie.setMaxAge(0);  // 만료된 쿠키로 설정
         return cookie;
